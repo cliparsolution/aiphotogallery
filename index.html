@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Art Gallery - Discover & Download AI-Generated Images</title>
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+	/* Add this to your CSS */
+	html {
+	  scroll-behavior: smooth;
+	}
+
+	/* Optional: Style for active nav link */
+	.nav-links a.active {
+	  color: var(--accent-color);
+	  font-weight: 700;
+	}
+
+        /* Variables */
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --dark-color: #2d3436;
+            --light-color: #f5f6fa;
+            --accent-color: #fd79a8;
+            --success-color: #00b894;
+            --danger-color: #d63031;
+        }
+
+        /* Global Styles */
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+	/* Add this to your CSS file */
+	.banner {
+	  padding: 3rem 0;
+	  text-align: center;
+	  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+	  margin: 2rem 0;
+	}
+
+	.banner-content {
+	  max-width: 800px;
+	  margin: 0 auto;
+	}
+
+	.banner h2 {
+	  font-size: 2rem;
+	  margin-bottom: 1rem;
+	  color: var(--dark-color);
+	}
+
+	.banner p {
+	  font-size: 1.1rem;
+	  margin-bottom: 1.5rem;
+	  color: #555;
+	}
+
+	.banner.bottom-banner {
+	  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+	  color: white;
+	}
+
+	.bottom-banner h2,
+	.bottom-banner p {
+	  color: white;
+	}
+
+	.bottom-banner .btn {
+	  background: white;
+	  color: var(--primary-color);
+	}
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 1rem;
+            cursor: pointer;
+        }
+
+        /* Auth Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-switch {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .form-switch a {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .hero-btns .btn {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .hero-btns .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .hero-btns .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero-btns .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .gallery-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .gallery-info {
+            padding: 1.5rem;
+        }
+
+        .gallery-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .gallery-info p {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .gallery-item-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .like-btn.liked {
+            color: var(--accent-color);
+        }
+
+        .admin-actions {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .admin-actions button {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-actions button:hover {
+            background: var(--primary-color);
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            display: none;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(106, 90, 231, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-area p {
+            color: #666;
+        }
+
+        .upload-preview {
+            display: none;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .upload-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links li {
+            margin: 0 1rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            margin-bottom: 2rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+	
+	.social-share {
+	    margin-top: 10px;
+ 	   padding-top: 10px;
+	    border-top: 1px solid #eee;
+	    display: flex;
+	    align-items: center;
+	    gap: 10px;
+	}
+
+	.social-share a {
+	    color: #666;
+	    transition: color 0.3s ease;
+	}
+
+	.social-share a:hover {
+	    color: var(--primary-color);
+	}
+
+        .copyright {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links li:not(:last-child) {
+                display: none;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<!-- In the <head> section -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">AI Art Gallery</a>
+                <ul class="nav-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li id="auth-buttons">
+                        <button id="login-btn" class="btn btn-outline">Login</button>
+                        <button id="register-btn" class="btn">Register</button>
+                    </li>
+                    <li id="user-menu" style="display: none;">
+                        <span id="username-display"></span>
+                        <img src="https://ui-avatars.com/api/?name=User&background=6c5ce7&color=fff" alt="User" class="user-avatar" id="user-avatar">
+                    </li>
+                    <li id="admin-upload-btn" style="display: none;">
+                        <button class="btn btn-success" id="toggle-upload">Upload Image</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Login to Your Account</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Login</button>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+            </form>
+            <div class="form-switch">
+                Don't have an account? <a href="#" id="switch-to-register">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create an Account</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirm Password</label>
+                    <input type="password" id="register-confirm-password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Register</button>
+                </div>
+            </form>
+            <div class="form-switch">
+                Already have an account? <a href="#" id="switch-to-login">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Discover Stunning AI-Generated Art</h1>
+            <p>Explore our collection of beautiful AI-created images. Like your favorites, download them for free, and use them for your creative projects. Our platform brings you the latest in artificial intelligence art generation.</p>
+            <div class="hero-btns">
+                <a href="#gallery" class="btn">Browse Gallery</a>
+                <a href="#" class="btn btn-outline">Learn About AI Art</a>
+            </div>
+        </div>
+    </section>
+
+<!-- Add this right after the </section> closing tag of your hero section -->
+<section class="banner">
+  <div class="container">
+    <div class="banner-content">
+      <h2>Discover Amazing AI Creations</h2>
+      <p>Explore thousands of AI-generated images and download them for free. Join our community of artists and creators.</p>
+      <a href="#gallery" class="btn">Browse Gallery</a>
+    </div>
+  </div>
+</section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>AI Image Gallery</h2>
+                <p>Browse through our collection of AI-generated images. Click on any image to view details and download options.</p>
+            </div>
+            
+            <!-- Upload Section (Visible to Admin) -->
+            <div class="upload-section" id="upload-section">
+                <h3>Upload New Image</h3>
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & drop your image here or click to browse</p>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label for="image-title">Image Title</label>
+                    <input type="text" id="image-title" placeholder="Enter a title for your image">
+                </div>
+                <div class="form-group">
+                    <label for="image-description">Description</label>
+                    <input type="text" id="image-description" placeholder="Enter a description for your image">
+                </div>
+                <div class="upload-preview" id="upload-preview">
+                    <img id="preview-image" src="#" alt="Preview">
+                    <button class="btn btn-success" id="confirm-upload">Upload Image</button>
+                    <button class="btn btn-danger" id="cancel-upload">Cancel</button>
+                </div>
+            </div>
+            
+            <div class="gallery-actions">
+                <div id="sort-options">
+                    <label for="sort-by">Sort by:</label>
+                    <select id="sort-by">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="gallery-grid" id="imageGallery">
+                <!-- Images will be added dynamically with JavaScript -->
+            </div>
+        </div>
+    </section>
+
+<!-- Add this right before the <footer> tag -->
+<section class="banner bottom-banner">
+  <div class="container">
+    <div class="banner-content">
+      <h2>Ready to Join Our Community?</h2>
+      <p>Sign up today to upload your own AI creations and connect with other artists.</p>
+      <button id="banner-register-btn" class="btn">Register Now</button>
+    </div>
+  </div>
+</section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <a href="#" class="footer-logo">AI Art Gallery</a>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+                <div class="social-icons">
+    <a href="https://www.facebook.com/profile.php?id=61575099312510" target="_blank"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://x.com/CliparSolution" target="_blank"><i class="fab fa-twitter"></i></a>
+    <a href="https://instagram.com/cliparsolution" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://discord.com/invite/XqvNd7ufZ8" target="_blank"><i class="fab fa-discord"></i></a>
+</div>
+                <p class="copyright">© 2023 AI Art Gallery Powered by Clipar Soultion. All AI-generated images are free to download and use.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- JavaScript -->
+    <script>
+
+// Add this to your JavaScript, preferably after DOMContentLoaded
+document.querySelectorAll('.nav-links a').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Remove active class from all links
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.classList.remove('active');
+    });
+    
+    // Add active class to clicked link
+    this.classList.add('active');
+    
+    // Get the target section
+    const targetId = this.getAttribute('href');
+    if(targetId === '#') return;
+    
+    const targetSection = document.querySelector(targetId);
+    
+    // Smooth scroll to section
+    targetSection.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  });
+});
+
+// Optional: Highlight active section while scrolling
+window.addEventListener('scroll', () => {
+  const scrollPosition = window.scrollY;
+  
+  document.querySelectorAll('section').forEach(section => {
+    const sectionTop = section.offsetTop - 100;
+    const sectionHeight = section.offsetHeight;
+    const sectionId = section.getAttribute('id');
+    
+    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.remove('active');
+        if(link.getAttribute('href') === `#${sectionId}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+});
+        // Sample data for users
+        const users = [
+            {
+                id: 1,
+                name: "Admin User",
+                email: "admin@example.com",
+                password: "admin123",
+                isAdmin: true,
+                avatar: "https://ui-avatars.com/api/?name=Admin&background=6c5ce7&color=fff"
+            },
+            {
+                id: 2,
+                name: "Regular User",
+                email: "user@example.com",
+                password: "user123",
+                isAdmin: false,
+                avatar: "https://ui-avatars.com/api/?name=User&background=6c5ce7&color=fff"
+            }
+        ];
+
+        // Sample AI-generated images data
+        let aiImages = [
+            {
+                id: 1,
+                title: "Cosmic Landscape",
+                description: "AI-generated cosmic landscape with vibrant colors",
+                url: "C:\Users\krish\Downloads\AI Charactors\image.png",
+                likes: 124,
+                isLiked: false,
+                uploadDate: new Date(2023, 5, 15),
+                uploaderId: 1
+            },
+            {
+                id: 2,
+                title: "Fantasy Castle",
+                description: "Magical castle floating in the clouds created by AI",
+                url: "https://source.unsplash.com/random/600x400/?ai,fantasy,castle",
+                likes: 89,
+                isLiked: false,
+                uploadDate: new Date(2023, 5, 10),
+                uploaderId: 1
+            },
+            {
+                id: 3,
+                title: "Cyberpunk City",
+                description: "Futuristic cityscape with neon lights generated by AI",
+                url: "https://source.unsplash.com/random/600x400/?ai,cyberpunk,city",
+                likes: 156,
+                isLiked: false,
+                uploadDate: new Date(2023, 5, 5),
+                uploaderId: 1
+            },
+            {
+                id: 4,
+                title: "Surreal Portrait",
+                description: "Abstract human face with surreal elements created with AI",
+                url: "https://source.unsplash.com/random/600x400/?ai,portrait,surreal",
+                likes: 72,
+                isLiked: false,
+                uploadDate: new Date(2023, 4, 28),
+                uploaderId: 1
+            }
+        ];
+
+        // Current user state
+        let currentUser = null;
+
+        // DOM Elements
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const switchToRegister = document.getElementById('switch-to-register');
+        const switchToLogin = document.getElementById('switch-to-login');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const authButtons = document.getElementById('auth-buttons');
+        const userMenu = document.getElementById('user-menu');
+        const usernameDisplay = document.getElementById('username-display');
+        const userAvatar = document.getElementById('user-avatar');
+        const adminUploadBtn = document.getElementById('admin-upload-btn');
+        const uploadSection = document.getElementById('upload-section');
+        const toggleUploadBtn = document.getElementById('toggle-upload');
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const uploadPreview = document.getElementById('upload-preview');
+        const previewImage = document.getElementById('preview-image');
+        const confirmUpload = document.getElementById('confirm-upload');
+        const cancelUpload = document.getElementById('cancel-upload');
+        const imageTitle = document.getElementById('image-title');
+        const imageDescription = document.getElementById('image-description');
+        const sortBy = document.getElementById('sort-by');
+
+        // Modal functionality
+        function openModal(modal) {
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                closeModal(loginModal);
+            }
+            if (e.target === registerModal) {
+                closeModal(registerModal);
+            }
+        });
+
+        // Modal event listeners
+        loginBtn.addEventListener('click', () => openModal(loginModal));
+        registerBtn.addEventListener('click', () => openModal(registerModal));
+        switchToRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(loginModal);
+            openModal(registerModal);
+        });
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(registerModal);
+            openModal(loginModal);
+        });
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                closeModal(modal);
+            });
+        });
+
+        // Login functionality
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                updateUIAfterLogin();
+                closeModal(loginModal);
+                alert('Login successful!');
+            } else {
+                alert('Invalid email or password');
+            }
+        });
+
+        // Register functionality
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (users.some(u => u.email === email)) {
+                alert('Email already registered');
+                return;
+            }
+            
+            const newUser = {
+                id: users.length + 1,
+                name,
+                email,
+                password,
+                isAdmin: false,
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6c5ce7&color=fff`
+            };
+            
+            users.push(newUser);
+            currentUser = newUser;
+            updateUIAfterLogin();
+            closeModal(registerModal);
+            alert('Registration successful! You are now logged in.');
+        });
+
+        // Update UI after login
+        function updateUIAfterLogin() {
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'block';
+            usernameDisplay.textContent = currentUser.name;
+            userAvatar.src = currentUser.avatar;
+            
+            if (currentUser.isAdmin) {
+                adminUploadBtn.style.display = 'block';
+                uploadSection.style.display = 'block';
+            } else {
+                adminUploadBtn.style.display = 'none';
+                uploadSection.style.display = 'none';
+            }
+            
+            renderGallery();
+        }
+
+        // Logout functionality (would be triggered by a logout button in the user menu)
+        function logout() {
+            currentUser = null;
+            authButtons.style.display = 'block';
+            userMenu.style.display = 'none';
+            adminUploadBtn.style.display = 'none';
+            uploadSection.style.display = 'none';
+            renderGallery();
+        }
+
+        // Add logout functionality to user avatar (for demo)
+        userAvatar.addEventListener('click', () => {
+            if (confirm('Are you sure you want to logout?')) {
+                logout();
+            }
+        });
+
+        // Upload functionality
+        toggleUploadBtn.addEventListener('click', () => {
+            uploadSection.style.display = uploadSection.style.display === 'block' ? 'none' : 'block';
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    previewImage.src = event.target.result;
+                    uploadPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        confirmUpload.addEventListener('click', () => {
+            if (!fileInput.files[0] || !imageTitle.value) {
+                alert('Please select an image and provide a title');
+                return;
+            }
+            
+            // In a real app, you would upload the image to a server
+            // For this demo, we'll just add it to our local array
+            const newImage = {
+                id: aiImages.length + 1,
+                title: imageTitle.value,
+                description: imageDescription.value,
+                url: previewImage.src, // In real app, this would be the server URL
+                likes: 0,
+                isLiked: false,
+                uploadDate: new Date(),
+                uploaderId: currentUser.id
+            };
+            
+            aiImages.unshift(newImage); // Add to beginning of array
+            renderGallery();
+            
+            // Reset upload form
+            fileInput.value = '';
+            imageTitle.value = '';
+            imageDescription.value = '';
+            uploadPreview.style.display = 'none';
+            uploadSection.style.display = 'none';
+            
+            alert('Image uploaded successfully!');
+        });
+
+        cancelUpload.addEventListener('click', () => {
+            fileInput.value = '';
+            imageTitle.value = '';
+            imageDescription.value = '';
+            uploadPreview.style.display = 'none';
+        });
+
+        // Sort functionality
+        sortBy.addEventListener('change', () => {
+            renderGallery();
+        });
+
+        // Function to render gallery items
+        function renderGallery() {
+            const galleryContainer = document.getElementById('imageGallery');
+            galleryContainer.innerHTML = '';
+            
+            // Sort images based on selected option
+            let sortedImages = [...aiImages];
+            const sortValue = sortBy.value;
+            
+            if (sortValue === 'newest') {
+                sortedImages.sort((a, b) => b.uploadDate - a.uploadDate);
+            } else if (sortValue === 'oldest') {
+                sortedImages.sort((a, b) => a.uploadDate - b.uploadDate);
+            } else if (sortValue === 'popular') {
+                sortedImages.sort((a, b) => b.likes - a.likes);
+            }
+            
+            sortedImages.forEach(image => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                
+                // Check if current user is the uploader (for admin actions)
+                const isUploader = currentUser && currentUser.id === image.uploaderId;
+                
+                galleryItem.innerHTML = `
+                    <img src="${image.url}" alt="${image.title}" class="gallery-img">
+                    <div class="gallery-info">
+                        <h3>${image.title}</h3>
+                        <p>${image.description}</p>
+                        <div class="gallery-item-actions">
+                            <button class="like-btn ${image.isLiked ? 'liked' : ''}" data-id="${image.id}">
+                                <i class="fas fa-heart"></i> <span>${image.likes}</span>
+                            </button>
+                            <a href="${image.url}" download="${image.title.replace(/\s+/g, '-').toLowerCase()}.jpg" class="btn">Download</a>
+                        </div>
+                    </div>
+                    ${isUploader ? `
+                    <div class="admin-actions">
+                        <button class="edit-btn" data-id="${image.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-btn" data-id="${image.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    ` : ''}
+                `;
+                galleryContainer.appendChild(galleryItem);
+            });
+            
+            // Add event listeners to like buttons
+            document.querySelectorAll('.like-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (!currentUser) {
+                        alert('Please login to like images');
+                        return;
+                    }
+                    
+                    const imageId = parseInt(this.getAttribute('data-id'));
+                    const image = aiImages.find(img => img.id === imageId);
+                    
+                    if (image.isLiked) {
+                        image.likes--;
+                        image.isLiked = false;
+                        this.classList.remove('liked');
+                    } else {
+                        image.likes++;
+                        image.isLiked = true;
+                        this.classList.add('liked');
+                    }
+                    
+                    this.querySelector('span').textContent = image.likes;
+                });
+            });
+            
+            // Add event listeners to admin buttons
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const imageId = parseInt(this.getAttribute('data-id'));
+                    // In a real app, you would implement edit functionality
+                    alert('Edit functionality would be implemented here');
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const imageId = parseInt(this.getAttribute('data-id'));
+                    if (confirm('Are you sure you want to delete this image?')) {
+                        aiImages = aiImages.filter(img => img.id !== imageId);
+                        renderGallery();
+                    }
+                });
+            });
+        }
+        
+        // Initialize the gallery when the page loads
+        document.addEventListener('DOMContentLoaded', renderGallery);
+    </script>
+</body>
+</html>
